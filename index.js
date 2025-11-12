@@ -28,24 +28,30 @@ app.use(
 app.use(express.json());
 const upload = multer({ storage: multer.memoryStorage() });
 
-// 🔹 Helper: verify Firebase user and fetch their API key
 async function getUserApiKey(req) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer ")) throw new Error("Missing or invalid Authorization header");
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) throw new Error("Missing or invalid Authorization header");
 
-  const admin = (await import("firebase-admin")).default;
-  const idToken = authHeader.split("Bearer ")[1];
-  const decoded = await admin.auth().verifyIdToken(idToken);
-  const uid = decoded.uid;
+    const admin = (await import("firebase-admin")).default;
+    const idToken = authHeader.split("Bearer ")[1];
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    console.log("Decoded Firebase token:", decoded);
+    const uid = decoded.uid;
 
-  const userDoc = await db.collection("users").doc(uid).get();
-  if (!userDoc.exists) throw new Error("User not found in Firestore");
+    const userDoc = await db.collection("users").doc(uid).get();
+    if (!userDoc.exists) throw new Error("User not found in Firestore");
 
-  const apiKey = userDoc.data()?.api?.key;
-  if (!apiKey) throw new Error("User API key not found");
+    const apiKey = userDoc.data()?.api?.key;
+    if (!apiKey) throw new Error("User API key not found");
 
-  return apiKey;
+    return apiKey;
+  } catch (err) {
+    console.error("Failed to verify Firebase token:", err);
+    throw err;
+  }
 }
+
 
 // 🔹 Proxy endpoint
 app.post("/api/proxy/:service", upload.single("image"), async (req, res) => {
