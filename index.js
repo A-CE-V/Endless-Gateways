@@ -56,6 +56,9 @@ app.post("/api/proxy/:service", upload.single("image"), async (req, res) => {
     const serviceMap = {
       vectors: "https://endless-vectors-gxda.onrender.com/convert",
       images: "https://endless-images-second-life.onrender.com/convert",
+      contact: "https://endless-bureaucracy.onrender.com/contact",
+      profilepicture: "https://endless-bureaucracy.onrender.com/upload-profile-pic",
+      profilename: "https://endless-bureaucracy.onrender.com/update-profile-name"
     };
 
     const targetUrl = serviceMap[service];
@@ -92,5 +95,5 @@ app.get("/health", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Endless Gateway API running on port ${port}`);
+  console.log(`Endless Gateway API running on port ${port}`);
 });
