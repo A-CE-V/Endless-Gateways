@@ -5,7 +5,13 @@ let serviceAccount;
 try {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!raw) throw new Error("FIREBASE_SERVICE_ACCOUNT not set");
+
   serviceAccount = JSON.parse(raw);
+
+  if (serviceAccount.private_key) {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+  }
+
 } catch (err) {
   console.error("Firebase config error:", err.message);
   process.exit(1);
