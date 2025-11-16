@@ -87,6 +87,11 @@ app.post("/api/proxy/:service", upload.single("image"), async (req, res) => {
       contact: "https://endless-bureaucracy.onrender.com/contact",
       profilepicture: "https://endless-bureaucracy.onrender.com/upload-profile-pic",
       profilename: "https://endless-bureaucracy.onrender.com/update-profile-name",
+
+      codedetect: "https://endless-code-tools-api.onrender.com/detect",
+      codecompact: "https://endless-code-tools-api.onrender.com/compact",
+      codeuncompact: "https://endless-code-tools-api.onrender.com/uncompact",
+      codeformat: "https://endless-code-tools-api.onrender.com/format",
     };
 
     const targetUrl = serviceMap[service];
